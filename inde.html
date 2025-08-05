@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Search App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🎬 Movie Search App</h1>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Enter movie title..." />
+      <button id="searchBtn">Search</button>
+    </div>
+    <div id="loader" class="loader hidden"></div>
+    <div id="movieDetails"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+<style>
+  body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #121212;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  width: 60%;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1976d2;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2196f3;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin: 20px auto;
+ animation: spin 3s linear infinite;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes spin{
+  0%{
+    transform: rotate(0deg);
+
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+#movieDetails {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+#movieDetails img {
+  float: right;
+  margin-left: 20px;
+  width: 150px;
+}
+
+@media (max-width: 600px) {
+  #movieDetails img {
+    float: none;
+    display: block;
+    margin: 10px auto;
+  }
+}
+
+</style>
+<script>
+  const API_KEY = 'b8f599bf'; // Replace this with your OMDb API key
+const searchBtn = document.getElementById('searchBtn');
+const searchInput = document.getElementById('searchInput');
+const movieDetails = document.getElementById('movieDetails');
+const loader = document.getElementById('loader');
+
+// Trigger on button click
+searchBtn.addEventListener('click', searchMovie);
+
+// Also trigger on "Enter" key
+searchInput.addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') {
+    searchMovie();
+  }
+});
+
+function searchMovie() {
+  const title = searchInput.value.trim();
+  if (!title) {
+    alert('Please enter a movie name!');
+    return;
+  }
+
+  movieDetails.innerHTML = '';
+  loader.classList.remove('hidden');
+
+  fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${API_KEY}`)
+    .then(response => response.json())
+    .then(data => {
+      loader.classList.add('hidden');
+
+      if (data.Response === 'False') {
+        movieDetails.innerHTML = `<p style="color: red;">❌ Movie not found.</p>`;
+        return;
+      }
+
+      movieDetails.innerHTML = `
+        <h2>${data.Title} (${data.Year})</h2>
+        <img src="${data.Poster !== 'N/A' ? data.Poster : 'https://via.placeholder.com/150'}" alt="Poster" />
+        <p><strong>Genre:</strong> ${data.Genre}</p>
+        <p><strong>Director:</strong> ${data.Director}</p>
+        <p><strong>Actors:</strong> ${data.Actors}</p>
+        <p><strong>Plot:</strong> ${data.Plot}</p>
+        <p><strong>IMDb Rating:</strong> ⭐ ${data.imdbRating}</p>
+      `;
+    })
+    .catch(error => {
+      loader.classList.add('hidden');
+      movieDetails.innerHTML = `<p style="color: red;">⚠️ An error occurred. Try again later.</p>`;
+      console.error('Fetch error:', error);
+    });
+}
+
+</script>
