@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="shortcut icon" href="https://sm.pcmag.com/t/pcmag_me/review/d/deezer/deezer_f1ps.3840.jpg" type="image/x-icon">
+
+<title>Music Search Player</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a, #333);
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1 {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+
+  }
+
+  input {
+    font-weight: bolder;
+  max-width: 25em;
+    padding: 10px;
+    width: 60%;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 20px;
+  }
+
+  button {
+    background: #fefffe;
+    border: none;
+    padding: 10px 18px;
+    margin: 10px 5px;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+
+  }
+
+  button:hover {
+    background: #0eff52;
+  }
+
+  .song {
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 10px;
+    max-width: 500px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+  }
+
+  .song-info {
+    flex: 1;
+  }
+
+  a.download-btn {
+    text-decoration: none;
+    background: #2196f3;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.3s;
+  }
+
+  a.download-btn:hover {
+    background: #1976d2;
+  }
+</style>
+</head>
+<body>
+
+  <div class="player">
+    <img src="/images/music+music+player+player+sound+icon-1320183419420921997_512px.png" alt="">
+  </div>
+<h1>Deezer Music Search Player</h1>
+
+<input type="text" id="searchBox" placeholder="Search for songs...">
+<button onclick="searchSongs()">Search</button>
+
+<div id="results"></div>
+
+<script>
+let currentAudio = null; // Track currently playing song
+
+async function searchSongs() {
+  const query = document.getElementById("searchBox").value.trim();
+  if (!query) return alert("Please enter a search term");
+
+  const res = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`, {
+    method: "GET",
+    headers: {
+      "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com",
+      "x-rapidapi-key": "3c64e2eef1mshc55f94902818161p194914jsn84da2d2249d1" // Replace with your RapidAPI key
+    }
+  }).catch(() => alert("Error fetching data"));
+
+  if (!res) return;
+  const data = await res.json();
+  displayResults(data.data);
+}
+
+function displayResults(songs) {
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+
+  songs.forEach(song => {
+    const songDiv = document.createElement("div");
+    songDiv.className = "song";
+
+    songDiv.innerHTML = `
+      <img src="${song.album.cover_small}" alt="cover">
+      <div class="song-info">
+        <strong>${song.title}</strong><br>
+        ${song.artist.name}
+      </div>
+      <button onclick="playSong('${song.preview}', this)">▶</button>
+      <a href="${song.preview}" class="download-btn" download>⬇</a>
+    `;
+
+    results.appendChild(songDiv);
+  });
+}
+
+function playSong(url, btn) {
+  if (currentAudio && !currentAudio.paused) {
+    currentAudio.pause();
+    btn.textContent = "▶";
+    currentAudio = null;
+    return;
+  }
+
+  if (currentAudio) currentAudio.pause();
+
+  const audio = new Audio(url);
+  currentAudio = audio;
+  audio.play();
+  btn.textContent = "⏸";
+
+  audio.onended = () => {
+    btn.textContent = "▶";
+  };
+}
+</script>
+
+</body>
+</html>
