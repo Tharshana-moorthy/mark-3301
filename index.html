@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Infinite Carousel ? HTML & CSS</title>
+  <style>
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#0f172a;color:#e6eef8}
+
+    .carousel-wrap{
+      width:min(1100px,95%);
+      margin:24px auto;
+    }
+
+    .carousel{
+      overflow:hidden;
+      border-radius:12px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(0,0,0,0.12));
+      padding:12px;
+    }
+
+    .track{
+      display:flex;
+      gap:16px;
+      align-items:stretch;
+      animation: scroll 10s linear infinite;
+      will-change:transform;
+    }
+
+    
+    .carousel:hover .track{ animation-play-state: paused }
+ 
+
+    .slide{
+      flex: 0 0 calc((100% - (3 - 1) * 16px) / 3);
+      position:relative;
+      aspect-ratio: 16 / 9;
+      border-radius:8px;
+      overflow:hidden;
+      background:#071229;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.6), inset 0 -6px 18px rgba(255,255,255,0.02);
+      display:flex;align-items:flex-end;justify-content:left;
+    }
+
+    .slide img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .caption{
+      position:absolute;left:12px;right:12px;bottom:12px;
+      padding:8px 10px;border-radius:6px;
+      background:linear-gradient(180deg, rgba(6,10,18,0.2), rgba(6,10,18,0.55));
+      color:#fff;font-weight:600;font-size:0.95rem;backdrop-filter:blur(4px);
+    }
+
+    @keyframes scroll{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(calc(-50% - 8px))}
+    }
+
+    @media (max-width:900px){
+      .slide{flex: 0 0 calc((100% - (2.2 - 1) * 16px) / 2.2);}
+      .track{animation-duration:14s;}
+    }
+    @media (max-width:600px){
+      .slide{flex: 0 0 calc((100% - (1.25 - 1) * 16px) / 1.25);}
+      .track{animation-duration:10s;}
+    }
+
+    .track .slide[aria-hidden="true"] .caption{opacity:0.96}
+  </style>
+</head>
+<body>
+
+  <div class="carousel-wrap">
+    <h2 style="margin:0 0 12px 6px;font-weight:700">Infinite Carousel ? HTML & CSS</h2>
+
+    <div class="carousel" aria-roledescription="carousel">
+      <div class="track" role="list">
+
+        <div class="slide" role="listitem">
+          <img src="https://picsum.photos/id/1015/1200/675" alt="Mountain lake"/>
+          <div class="caption">Mountain Lake</div>
+        </div>
+
+        <div class="slide" role="listitem">
+          <img src="https://picsum.photos/id/1025/1200/675" alt="Majestic dog"/>
+          <div class="caption">Majestic Dog</div>
+        </div>
+
+        <div class="slide" role="listitem">
+          <img src="https://picsum.photos/id/1039/1200/675" alt="Forest path"/>
+          <div class="caption">Forest Path</div>
+        </div>
+
+        <div class="slide" role="listitem">
+          <img src="https://picsum.photos/id/1043/1200/675" alt="Desert dunes"/>
+          <div class="caption">Desert Dunes</div>
+        </div>
+
+        <div class="slide" role="listitem">
+          <img src="https://picsum.photos/id/1050/1200/675" alt="Ocean horizon"/>
+          <div class="caption">Ocean Horizon</div>
+        </div>
+
+        <div class="slide" role="listitem">
+          <img src="https://picsum.photos/id/1067/1200/675" alt="City at night"/>
+          <div class="caption">City at Night</div>
+        </div>
+
+        <div class="slide" role="listitem" aria-hidden="true">
+          <img src="https://picsum.photos/id/1015/1200/675" alt="Mountain lake"/>
+          <div class="caption">Mountain Lake</div>
+        </div>
+
+        <div class="slide" role="listitem" aria-hidden="true">
+          <img src="https://picsum.photos/id/1025/1200/675" alt="Majestic dog"/>
+          <div class="caption">Majestic Dog</div>
+        </div>
+
+        <div class="slide" role="listitem" aria-hidden="true">
+          <img src="https://picsum.photos/id/1039/1200/675" alt="Forest path"/>
+          <div class="caption">Forest Path</div>
+        </div>
+
+        <div class="slide" role="listitem" aria-hidden="true">
+          <img src="https://picsum.photos/id/1043/1200/675" alt="Desert dunes"/>
+          <div class="caption">Desert Dunes</div>
+        </div>
+
+        <div class="slide" role="listitem" aria-hidden="true">
+          <img src="https://picsum.photos/id/1050/1200/675" alt="Ocean horizon"/>
+          <div class="caption">Ocean Horizon</div>
+        </div>
+
+        <div class="slide" role="listitem" aria-hidden="true">
+          <img src="https://picsum.photos/id/1067/1200/675" alt="City at night"/>
+          <div class="caption">City at Night</div>
+        </div>
+
+      </div>
+    </div>
+
+    <p style="margin:10px 6px 0;font-size:0.92rem;opacity:0.85">Hover the carousel to pause. Adjust <code>animation-duration</code> or slide width in CSS to change speed and visible slides.</p>
+  </div>
+
+</body>
+</html>
